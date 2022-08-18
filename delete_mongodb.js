@@ -1,8 +1,10 @@
-const mongodb = require('mongodb');
-const MongoClient = mongodb.MongoClient
+const { MongoClient, ObjectId} = require('mongodb');
 
 const connectionUrl = "mongodb://127.0.0.1:27017"
 const databaseName = "task-manager"
+
+const id = new ObjectId // generate guid (ObjectID is deprecated, ıse ObjectId)
+const timestamp = id.getTimestamp()
 
 MongoClient.connect(connectionUrl, { useNewUrlParser: true }, (error, client) => {
   if (error) {
@@ -12,17 +14,6 @@ MongoClient.connect(connectionUrl, { useNewUrlParser: true }, (error, client) =>
   console.log("Connected to " + connectionUrl)
 
   const db = client.db(databaseName)
-  db.collection('users').insertMany([{
-    name: 'Atalay',
-    age: 23
-  },
-  {
-    name: 'wadawada',
-    age: 24
-  }], (error, result) => {
-    if (error) {
-      return console.log("Cannot insert user")
-    }
-    console.log(result)
-  })
+  
+
 })
