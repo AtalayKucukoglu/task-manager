@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
-const { User, Task } = require('./models')
+const User = require('./models/User')
+const Task = require('./models/Task')
 
 const connectionUrl = "mongodb://127.0.0.1:27017/task-manager-api"
 mongoose.connect(connectionUrl)
