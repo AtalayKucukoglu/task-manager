@@ -19,6 +19,40 @@ router.post('/users', (req, res) => {
   });
 })
 
+// login user
+router.post('/users/login', async (req, res) => {
+  const { email, password } = req.body
+  try {
+    const user = await User.findByCredentials({ email, password })
+    const token = await user.generateAuthToken()
+    res.send({ user, token })
+  } catch (error) {
+    res.status(400).send({ message: error })
+  }
+})
+
+// logout user
+router.post('/users/logout', auth, async (req, res) => { 
+  try {
+    req.user.tokens = req.user.tokens.filter(t => t.token !== req.token)
+    await req.user.save()
+    res.send()
+  } catch (error) {
+    res.status(500).send(error)
+  }
+ })
+
+// logout from all sessions
+router.post('/users/logoutAll', auth, async (req, res) => { 
+  try {
+    req.user.tokens = []
+    await req.user.save()
+    res.send()
+  } catch (error) {
+    res.status(500).send(error)
+  }
+ })
+
 // get all users
 router.get('/users', auth, (req, res) => {
   User.find({}).then((users) => {
@@ -78,17 +112,6 @@ router.delete('/users/:id', (req, res) => {
     .catch(err => {
       res.status(500).send(err)
     })
-})
-
-router.post('/users/login', async (req, res) => {
-  const { email, password } = req.body
-  try {
-    const user = await User.findByCredentials({ email, password })
-    const token = await user.generateAuthToken()
-    res.send({ user, token })
-  } catch (error) {
-    res.status(400).send({ message: error })
-  }
 })
 
 module.exports = router
