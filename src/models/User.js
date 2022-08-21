@@ -52,6 +52,13 @@ schema.methods.generateAuthToken = async function () {
   return token
 }
 
+schema.methods.toJSON = function() {
+  const userObject = this.toObject()
+  delete userObject.password
+  delete userObject.tokens
+  return userObject
+}
+
 // statics are accessible on the model
 schema.statics.findByCredentials = async ({ email, password }) => {
   const user = await User.findOne({ email })
